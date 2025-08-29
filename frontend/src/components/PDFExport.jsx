@@ -107,16 +107,29 @@ const PDFExport = () => {
   };
 
   const getTotalHours = () => {
+    if (!units) return 0;
     return units
       .filter(unit => selectedUnits[unit.id])
       .reduce((acc, unit) => acc + unit.duration, 0);
   };
 
   const getTotalLessons = () => {
+    if (!units) return 0;
     return units
       .filter(unit => selectedUnits[unit.id])
-      .reduce((acc, unit) => acc + unit.lessons.length, 0);
+      .reduce((acc, unit) => acc + (unit.lessons?.length || 0), 0);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin mx-auto mb-4 text-indigo-600" />
+          <p className="text-gray-600">Chargement des données d'export...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-6">
