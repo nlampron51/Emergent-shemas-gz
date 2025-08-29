@@ -138,13 +138,24 @@ const UnitEditor = () => {
     }
   };
 
-  const updateLessonField = (lessonId, field, value) => {
-    setUnit({
-      ...unit,
-      lessons: unit.lessons.map(lesson => 
-        lesson.id === lessonId ? { ...lesson, [field]: value } : lesson
-      )
-    });
+  const updateLessonField = async (lessonId, field, value) => {
+    try {
+      const updateData = { [field]: value };
+      const updatedUnit = await apiService.updateLesson(unit.id, lessonId, updateData);
+      setUnit(updatedUnit);
+      
+      toast({
+        title: "Leçon mise à jour",
+        description: "Les modifications ont été sauvegardées.",
+      });
+    } catch (error) {
+      const errorInfo = handleApiError(error);
+      toast({
+        title: "Erreur",
+        description: errorInfo.message,
+        variant: "destructive"
+      });
+    }
   };
 
   if (!unit) {
