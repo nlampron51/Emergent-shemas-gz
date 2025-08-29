@@ -97,16 +97,16 @@ const Dashboard = () => {
             Schéma de Cours ICD201
           </h1>
           <p className="text-lg text-gray-600">
-            Technologies numériques et innovations dans un monde en évolution
+            {schedule.course_description}
           </p>
           <div className="flex justify-center gap-4">
             <Badge variant="outline" className="px-4 py-2">
               <Clock className="h-4 w-4 mr-2" />
-              {schedule.totalHours} heures
+              {schedule.total_hours} heures
             </Badge>
             <Badge variant="outline" className="px-4 py-2">
               <CalendarIcon className="h-4 w-4 mr-2" />
-              {schedule.totalWeeks} semaines
+              {schedule.total_weeks} semaines
             </Badge>
           </div>
         </div>
