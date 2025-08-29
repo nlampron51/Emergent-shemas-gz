@@ -76,7 +76,7 @@ const Dashboard = () => {
     );
   }
   
-  const totalProgress = (units.reduce((acc, unit) => acc + unit.duration, 0) / schedule.totalHours) * 100;
+  const totalProgress = (units.reduce((acc, unit) => acc + unit.duration, 0) / schedule.total_hours) * 100;
 
   const getUnitIcon = (unitId) => {
     const icons = {
