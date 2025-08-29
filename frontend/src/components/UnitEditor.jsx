@@ -92,25 +92,31 @@ const UnitEditor = () => {
     }
   };
 
-  const handleAddLesson = () => {
-    const newLesson = {
-      id: Date.now(),
-      title: "Nouvelle leçon",
-      duration: 2,
-      resources: [],
-      activities: [],
-      content: "Contenu de la leçon à définir..."
-    };
-    
-    setUnit({
-      ...unit,
-      lessons: [...unit.lessons, newLesson]
-    });
-    
-    toast({
-      title: "Leçon ajoutée",
-      description: "Une nouvelle leçon a été créée.",
-    });
+  const handleAddLesson = async () => {
+    try {
+      const newLessonData = {
+        title: "Nouvelle leçon",
+        duration: 2,
+        resources: [],
+        activities: [],
+        content: "Contenu de la leçon à définir..."
+      };
+      
+      const updatedUnit = await apiService.addLesson(unit.id, newLessonData);
+      setUnit(updatedUnit);
+      
+      toast({
+        title: "Leçon ajoutée",
+        description: "Une nouvelle leçon a été créée.",
+      });
+    } catch (error) {
+      const errorInfo = handleApiError(error);
+      toast({
+        title: "Erreur",
+        description: errorInfo.message,
+        variant: "destructive"
+      });
+    }
   };
 
   const handleDeleteLesson = (lessonId) => {
