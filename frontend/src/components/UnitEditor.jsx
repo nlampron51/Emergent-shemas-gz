@@ -17,23 +17,49 @@ import {
   Clock,
   Target,
   BookOpen,
-  Settings
+  Settings,
+  Loader2
 } from 'lucide-react';
-import { mockUnits, mockResources } from '../mock';
+import apiService, { handleApiError } from '../services/api';
 import { useToast } from '../hooks/use-toast';
 
 const UnitEditor = () => {
   const { id } = useParams();
   const { toast } = useToast();
   const [unit, setUnit] = useState(null);
-  const [resources] = useState(mockResources);
+  const [resources, setResources] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingLesson, setEditingLesson] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    const foundUnit = mockUnits.find(u => u.id === parseInt(id));
-    setUnit(foundUnit);
+    loadUnitData();
   }, [id]);
+
+  const loadUnitData = async () => {
+    try {
+      setLoading(true);
+      
+      // Load unit and resources in parallel
+      const [unitData, resourcesData] = await Promise.all([
+        apiService.getUnit(parseInt(id)),
+        apiService.getResources()
+      ]);
+      
+      setUnit(unitData);
+      setResources(resourcesData);
+    } catch (error) {
+      const errorInfo = handleApiError(error);
+      toast({
+        title: "Erreur de chargement",
+        description: errorInfo.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSaveUnit = () => {
     setIsEditing(false);
