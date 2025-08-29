@@ -51,7 +51,7 @@ class ApiService {
 
   // Resources API
   async getResources() {
-    const response = await axios.get(`${API}/resources`);
+    const response = await axios.get(`${API}/resources/`);
     return response.data;
   }
 
