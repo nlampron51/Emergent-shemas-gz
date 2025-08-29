@@ -119,16 +119,23 @@ const UnitEditor = () => {
     }
   };
 
-  const handleDeleteLesson = (lessonId) => {
-    setUnit({
-      ...unit,
-      lessons: unit.lessons.filter(l => l.id !== lessonId)
-    });
-    
-    toast({
-      title: "Leçon supprimée",
-      description: "La leçon a été supprimée avec succès.",
-    });
+  const handleDeleteLesson = async (lessonId) => {
+    try {
+      const updatedUnit = await apiService.deleteLesson(unit.id, lessonId);
+      setUnit(updatedUnit);
+      
+      toast({
+        title: "Leçon supprimée",
+        description: "La leçon a été supprimée avec succès.",
+      });
+    } catch (error) {
+      const errorInfo = handleApiError(error);
+      toast({
+        title: "Erreur",
+        description: errorInfo.message,
+        variant: "destructive"
+      });
+    }
   };
 
   const updateLessonField = (lessonId, field, value) => {
