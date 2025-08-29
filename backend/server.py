@@ -84,6 +84,7 @@ logger = logging.getLogger(__name__)
 async def startup_db_client():
     """Initialize database with default data on startup"""
     try:
+        from utils.database import DatabaseManager
         await DatabaseManager.init_default_data()
         logger.info("Database initialized successfully")
     except Exception as e:
@@ -91,4 +92,6 @@ async def startup_db_client():
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
-    client.close()
+    from utils.database import client
+    if client:
+        client.close()
