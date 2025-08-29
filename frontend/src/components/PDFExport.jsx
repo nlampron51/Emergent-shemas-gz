@@ -72,22 +72,38 @@ const PDFExport = () => {
     units.reduce((acc, unit) => ({ ...acc, [unit.id]: true }), {})
   );
 
-  const handleExportPDF = () => {
-    // Mock PDF generation
-    const selectedUnitsList = units.filter(unit => selectedUnits[unit.id]);
-    
-    toast({
-      title: "Export PDF en cours",
-      description: `Génération du PDF avec ${selectedUnitsList.length} unités...`,
-    });
+  const handleExportPDF = async () => {
+    try {
+      setExporting(true);
+      
+      const selectedUnitsList = units.filter(unit => selectedUnits[unit.id]);
+      
+      toast({
+        title: "Export PDF en cours",
+        description: `Génération du PDF avec ${selectedUnitsList.length} unités...`,
+      });
 
-    // Simulate PDF generation delay
-    setTimeout(() => {
+      const exportOptions = {
+        ...exportOptions,
+        selected_units: selectedUnitsList.map(unit => unit.id)
+      };
+
+      await apiService.exportToPDF(exportOptions);
+      
       toast({
         title: "PDF généré avec succès",
         description: "Le fichier a été téléchargé dans votre dossier de téléchargements.",
       });
-    }, 2000);
+    } catch (error) {
+      const errorInfo = handleApiError(error);
+      toast({
+        title: "Erreur d'export",
+        description: errorInfo.message,
+        variant: "destructive"
+      });
+    } finally {
+      setExporting(false);
+    }
   };
 
   const getTotalHours = () => {
