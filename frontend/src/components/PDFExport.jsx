@@ -153,9 +153,9 @@ const PDFExport = () => {
               <Eye className="h-4 w-4 mr-2" />
               Aperçu
             </Button>
-            <Button onClick={handleExportPDF} className="bg-gradient-to-r from-purple-500 to-pink-600">
-              <Download className="h-4 w-4 mr-2" />
-              Télécharger PDF
+            <Button onClick={handleExportPDF} className="bg-gradient-to-r from-purple-500 to-pink-600" disabled={exporting}>
+              {exporting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Download className="h-4 w-4 mr-2" />}
+              {exporting ? 'Génération...' : 'Télécharger PDF'}
             </Button>
           </div>
         </div>
