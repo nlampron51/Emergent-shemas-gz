@@ -122,7 +122,7 @@ class ApiService {
 
   // Settings API
   async getCourseSettings() {
-    const response = await axios.get(`${API}/settings`);
+    const response = await axios.get(`${API}/settings/`);
     return response.data;
   }
 
