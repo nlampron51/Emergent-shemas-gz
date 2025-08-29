@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
@@ -15,16 +15,49 @@ import {
   Calendar,
   Clock,
   Users,
-  Target
+  Target,
+  Loader2
 } from 'lucide-react';
-import { mockUnits, mockResources, mockSchedule } from '../mock';
+import apiService, { handleApiError } from '../services/api';
 import { useToast } from '../hooks/use-toast';
 
 const PDFExport = () => {
   const { toast } = useToast();
-  const [units] = useState(mockUnits);
-  const [resources] = useState(mockResources);
-  const schedule = mockSchedule;
+  const [units, setUnits] = useState([]);
+  const [resources, setResources] = useState([]);
+  const [schedule, setSchedule] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
+  const [previewData, setPreviewData] = useState(null);
+
+  useEffect(() => {
+    loadExportData();
+  }, []);
+
+  const loadExportData = async () => {
+    try {
+      setLoading(true);
+      
+      const [unitsData, resourcesData, settingsData] = await Promise.all([
+        apiService.getUnits(),
+        apiService.getResources(),
+        apiService.getCourseSettings()
+      ]);
+      
+      setUnits(unitsData);
+      setResources(resourcesData);
+      setSchedule(settingsData);
+    } catch (error) {
+      const errorInfo = handleApiError(error);
+      toast({
+        title: "Erreur de chargement",
+        description: errorInfo.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
   
   const [exportOptions, setExportOptions] = useState({
     includeObjectives: true,
