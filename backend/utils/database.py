@@ -4,8 +4,15 @@ import os
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
-client = AsyncIOMotorClient(os.environ['MONGO_URL'])
-db = client[os.environ['DB_NAME']]
+# Initialize database connection (will be set in server.py)
+client = None
+db = None
+
+def init_database():
+    """Initialize database connection"""
+    global client, db
+    client = AsyncIOMotorClient(os.environ['MONGO_URL'])
+    db = client[os.environ['DB_NAME']]
 
 class DatabaseManager:
     @staticmethod
