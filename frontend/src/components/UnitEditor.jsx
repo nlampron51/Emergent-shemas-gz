@@ -189,9 +189,10 @@ const UnitEditor = () => {
           <Button 
             onClick={isEditing ? handleSaveUnit : () => setIsEditing(true)}
             className="bg-gradient-to-r from-indigo-500 to-purple-600"
+            disabled={saving}
           >
-            {isEditing ? <Save className="h-4 w-4 mr-2" /> : <Edit2 className="h-4 w-4 mr-2" />}
-            {isEditing ? 'Sauvegarder' : 'Modifier'}
+            {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : (isEditing ? <Save className="h-4 w-4 mr-2" /> : <Edit2 className="h-4 w-4 mr-2" />)}
+            {saving ? 'Sauvegarde...' : (isEditing ? 'Sauvegarder' : 'Modifier')}
           </Button>
         </div>
 
