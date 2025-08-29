@@ -12,7 +12,7 @@ from datetime import datetime
 
 # Import route modules
 from routes import units, resources, calendar, settings, export
-from utils.database import DatabaseManager
+from utils.database import DatabaseManager, db
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
