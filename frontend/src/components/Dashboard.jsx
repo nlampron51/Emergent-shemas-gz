@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
@@ -12,13 +12,69 @@ import {
   Clock,
   Users,
   Lightbulb,
-  Cpu
+  Cpu,
+  Loader2
 } from 'lucide-react';
-import { mockUnits, mockSchedule } from '../mock';
+import apiService, { handleApiError } from '../services/api';
+import { useToast } from '../hooks/use-toast';
 
 const Dashboard = () => {
-  const [units] = useState(mockUnits);
-  const schedule = mockSchedule;
+  const [units, setUnits] = useState([]);
+  const [schedule, setSchedule] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
+
+  const loadDashboardData = async () => {
+    try {
+      setLoading(true);
+      
+      // Load units and course settings in parallel
+      const [unitsData, settingsData] = await Promise.all([
+        apiService.getUnits(),
+        apiService.getCourseSettings()
+      ]);
+      
+      setUnits(unitsData);
+      setSchedule(settingsData);
+    } catch (error) {
+      const errorInfo = handleApiError(error);
+      toast({
+        title: "Erreur de chargement",
+        description: errorInfo.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin mx-auto mb-4 text-indigo-600" />
+          <p className="text-gray-600">Chargement du tableau de bord...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!schedule) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">Erreur de chargement des données</p>
+          <Button onClick={loadDashboardData} className="mt-4">
+            Réessayer
+          </Button>
+        </div>
+      </div>
+    );
+  }
   
   const totalProgress = (units.reduce((acc, unit) => acc + unit.duration, 0) / schedule.totalHours) * 100;
 
