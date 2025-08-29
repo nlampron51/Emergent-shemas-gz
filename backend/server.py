@@ -10,16 +10,15 @@ from typing import List
 import uuid
 from datetime import datetime
 
-# Import route modules
-from routes import units, resources, calendar, settings, export
-from utils.database import DatabaseManager, db
-
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# Initialize database
-from utils.database import init_database
+# Initialize database first
+from utils.database import init_database, DatabaseManager, db
 init_database()
+
+# Import route modules after database initialization
+from routes import units, resources, calendar, settings, export
 
 # Create the main app without a prefix
 app = FastAPI(
