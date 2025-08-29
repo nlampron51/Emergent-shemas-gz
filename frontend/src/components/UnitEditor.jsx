@@ -61,12 +61,35 @@ const UnitEditor = () => {
     }
   };
 
-  const handleSaveUnit = () => {
-    setIsEditing(false);
-    toast({
-      title: "Unité sauvegardée",
-      description: "Les modifications ont été enregistrées avec succès.",
-    });
+  const handleSaveUnit = async () => {
+    try {
+      setSaving(true);
+      
+      const updateData = {
+        title: unit.title,
+        duration: unit.duration,
+        description: unit.description,
+        objectives: unit.objectives
+      };
+      
+      const updatedUnit = await apiService.updateUnit(unit.id, updateData);
+      setUnit(updatedUnit);
+      setIsEditing(false);
+      
+      toast({
+        title: "Unité sauvegardée",
+        description: "Les modifications ont été enregistrées avec succès.",
+      });
+    } catch (error) {
+      const errorInfo = handleApiError(error);
+      toast({
+        title: "Erreur de sauvegarde",
+        description: errorInfo.message,
+        variant: "destructive"
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleAddLesson = () => {
