@@ -10,7 +10,7 @@ axios.defaults.timeout = 10000;
 class ApiService {
   // Units API
   async getUnits() {
-    const response = await axios.get(`${API}/units`);
+    const response = await axios.get(`${API}/units/`);
     return response.data;
   }
 
