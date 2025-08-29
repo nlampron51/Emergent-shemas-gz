@@ -123,7 +123,7 @@ const Dashboard = () => {
             <div className="space-y-4">
               <Progress value={totalProgress} className="h-3" />
               <p className="text-sm text-gray-600">
-                {units.length} unités planifiées • {schedule.totalHours} heures totales
+                {units.length} unités planifiées • {schedule.total_hours} heures totales
               </p>
             </div>
           </CardContent>
