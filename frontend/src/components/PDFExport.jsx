@@ -305,11 +305,11 @@ const PDFExport = () => {
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div className="flex items-center gap-2 text-blue-700">
                         <Clock className="h-4 w-4" />
-                        {schedule.totalHours} heures sur {schedule.totalWeeks} semaines
+                        {schedule?.total_hours} heures sur {schedule?.total_weeks} semaines
                       </div>
                       <div className="flex items-center gap-2 text-blue-700">
                         <Calendar className="h-4 w-4" />
-                        {new Date(schedule.startDate).toLocaleDateString('fr-FR')} - {new Date(schedule.endDate).toLocaleDateString('fr-FR')}
+                        {schedule?.start_date && new Date(schedule.start_date).toLocaleDateString('fr-FR')} - {schedule?.end_date && new Date(schedule.end_date).toLocaleDateString('fr-FR')}
                       </div>
                     </div>
                   </div>
